@@ -62,7 +62,7 @@ controlamos o cabeçalho e o body de cada item (ou post, como no exemplo).
 {{/each}}
 ```
 
-Which can be used like so:
+Que pode ser usado como:
 
 ```app/templates/posts.hbs
 {{#post-list posts=headlinePosts}}
@@ -70,7 +70,7 @@ Which can be used like so:
 {{/post-list}}
 ```
 
-And will result in the following HTML:
+E o resultado será o seguinte HTML:
 
 ```html
 <div id="ember123" class="ember-view">
@@ -81,15 +81,17 @@ And will result in the following HTML:
 </div>
 ```
 
-But what use is it to just output the same thing over and over? Don't we want to customize our posts,
-and display the right content? Sure we do. Lets explore the `{{yield}}` helper a bit.
+Mas porque usar ele só para só para mostrar a mesma coisa? Nos não queremos costumizar nossos posts,
+e mostrar o conteudo correto? É claro que queremos. Vamos entender mais como funciona o `{{yield}}`
 
 ### Data Down
 
-To accomplish composability beyond simple templates, we need to pass data to those templates. This can be done with the `{{yield}}` helper that was introduced above.
+Para conseguir compor melhor por tras de templates simples, nos vamos precisar passar dados para esse template.
+Isso de ser feito com o helper `{{yield}}` que vai ser explicado logo abaixo.
 
-The `{{yield}}` defines where the content we defined inside our component block will yield in the component's layout,
-as we saw in the previous section. Apart from that, the yield helper also allows us to send data down by yielding params back to the scope the component was invoked in.
+O `{{yield}}` define onde o conteudo que definimos será inserido dentro do layout do nosso compoonente,
+assim como vimos na sessão anterior. Alem disso, o helper yield tambem nos permite enviar usar data down passando os
+parametros de volta para o escopo onde ele foi invocado.
 
 ```hbs
 {{yield}}
@@ -98,11 +100,13 @@ as we saw in the previous section. Apart from that, the yield helper also allows
 {{yield this "footer"}}
 ```
 
-By default yield does not send any data, but you can provide an arbitrary number of parameters. Also, the yielded values are ordered sequentially by how they are defined, so you access them in the same order as the component exposes them.
-Sending data down allows the consumer of our component to utilize that data.
-For the consumer to get access to the data, she needs to know what data a component exposes,
-this is where documentation is so crucial, and from there the yielded data can be accessed
-with the `as` operator. Let's take the following template as an example:
+Por padrão yield não envia nenhum dado, mas nos podemos providenciar isso com um numero arbitrario de parametros. Alem disso, os valores que o yield utilizar serão ordenados em uma ordem sequencial baseada em como ele foram definidos, então você pode acessa-los na mesma ordem que o componente.
+Utilizar data down permite ao consumidor do nosso componente à utilizar esse dado.
+
+Para o consumidor acessar esse dato, ele precisa saber qual é a informação for exposta pelo componente,
+aqui é onde documentação se revela crucial, e os dados enviados podem ser acessados com um operador `as`.
+Vamos utilizar o template abaixo como exemplo:
+
 
 ```app/components/user-list/template.hbs
 {{#each users as |user|}}
@@ -110,8 +114,8 @@ with the `as` operator. Let's take the following template as an example:
 {{/each}}
 ```
 
-This `{{user-list}}` component will yield as many times as there are users.
-We can consume it in the following way:
+Esse componente `{{user-list}}` irá se repetir quantas vezes foram necessarias.
+Nos vamos consumir ele da seguinte maneira:
 
 ```app/users/template.hbs
 {{#user-list users=users as |user|}}
@@ -119,10 +123,11 @@ We can consume it in the following way:
 {{/user-list}}
 ```
 
-Now `{{user-card}}` has access to the current user, which changes as the `{{user-list}}` iterates over each user
-since the `{{yield user}}` is inside the `{{each}}` block. Although this is nice, what if we used our component
-without a block, i.e. `{{user-list users=users}}`? This would make the component pretty useless since nothing is yielding,
-but the users are still being iterated. Let's mix in the `hasBlock` attribute and see if we can make it more useful.
+Agora `{{user-card}}` tem acesso ao usuario atual, que muda de acordo com a `{{user-list}}` que passa por todos os usuarios, já que 
+`{{yield user}}` esta dentro do bloco `{{each}}`. Embora isso seja bacana, nos tambem poderiamos usar nosso componente sem um bloco?
+(ex. `{{user-list users=users}}`) Isso faria nosso compomente inutil uma vez que nada esta utilizando o yield,
+mesmo que os usuarios continuem sendo intinerados. Vamos fazer um mix dentro do atributo `hasBlock` e ver como 
+podemos fazer esse componente mais util.
 
 ```app/components/user-list/template.hbs
 {{#if hasBlock}}
@@ -139,35 +144,36 @@ but the users are still being iterated. Let's mix in the `hasBlock` attribute an
 {{/if}}
 ```
 
-This makes our component more useful due too it having sane defaults, but it also allows us to override those defaults. By using the `{{yield}}` helper we can pass
-down our params for the consumer to utilize. This makes the concept of passing
-data down very useful.
+Isso faz nosso compomente mais util graças aos seus valores default serem melhor definidos,
+mas tambem é possivel alterar esses valores. Utilizando o helper `{{yield}}` nos podemos passar para baixo
+os parametros que o consumidor irá usar. Isso faz o conceito de 'passar dados para baixo' muito util.
 
 #### `{{component}}` Helper
 
-To understand the `{{component}}` helper, we will add the following new features to the `{{user-list}}` component:
+Para entender o  helper `{{component}}`, nos vamos precisar adicionar novas features no componente `{{user-list}}`:
 
-* For each type of user, we want to use different layout.
-* The list can also be toggled between basic and detailed mode.
+* Para cada tipo de usuario, nos queremos um layout diferente.
+* As listas podem ser exibidas tanto como display basico e detalhado.
 
-Let's add a new type of user, a superuser, which will have different behavior in our application. How would the consumer use this new data to show a different
-UI for each type of user? This is where the `{{component}}` helper comes into play. This helper allows us to render a component chosen at runtime.
+Vamos adicionar um novo tipo de usuario, o superusuario, ele irá tem um comportamento diferente na nossa aplicacão. 
+Como o consumidor irá utilizar esses dados para mostrar esse uma interface diferente para cada usuario? É ai que o 
+`{{component}}` entra na jogada. Esse helper nos permite escolher qual template renderizar em pleno tempo de execução.
 
-Since we have two user types, 'public' and 'superuser', and we want to render
-a component for each type plus for the simple and detailed modes. We want to have the following component names:
+Nos temos dois tipos de usuarios, o tipo 'public' e 'superuser', nos queremos renderizar um componente
+para cada tipo, alem dos modos basico e detalhado. Nos vamos construir os seguintes componentes:
 
 * `basic-card-public`
 * `basic-card-superuser`
 * `detailed-card-public`
 * `detailed-card-superuser`
 
-We can create these names by using the `{{concat}}` helper in nested form.
+Nos vamos criar esses nomes usando o helper `{{concat}}` em sua nested form (forma aninhada).
 
 ```hbs
 {{component (concat 'basic-card-' user.type)}}
 ```
 
-Now that our component names are valid due to the use of dashed, we can put together the full template with the two modes.
+Agora o nome dos nossos componentes são validos graças ao uso do traço, nova vamos colocar o templete completo de duas formas.
 
 ```app/users/template.hbs
 {{#user-list users=users as |user basicMode|}}
@@ -179,30 +185,29 @@ Now that our component names are valid due to the use of dashed, we can put toge
 {{/user-list}}
 ```
 
-Now we have `{{basic-card-superuser}}` and `{{detailed-card-public}}` rendering in their respective places
-based on the `user.type` equaling 'superuser' and 'public' respectively. The use of the 'concat' helper in nested form allowed us to accomplish that. Nested helpers are evaluated before the parent helper
-and then that helper can use the value returned by the nested helper. In this case it's just a concatenation of two values. You can
-also experiment with other helpers in nested form, like the `if` helper.
+Nos temos o `{{basic-card-superuser}}` e o `{{detailed-card-public}}` sendo renderizados em seus respectivos lugares baseando-se no `user.type` sendo igual 'superuser' e 'public' respectivamente. O uso do helper 'concat' é aninhado para cumprir isso. Helpers aninhados são avaliadso antes do helper pai e esse helper
+pode ser usar o valor retornado pelo helper aninhado. Nesse caso é só a concatenação de dois valores. vocÊ pode tentar tambem com mais helpers aninhados,
+como o `if` por exemplo.
 
-Apart from the use of `{{component}}`, we also have the second yielded value for our basic/detailed mode feature,
-which we've added to our yield, i.e. `{{yield user basic}}`.
+A partid do uso do `{{component}}`, nos tambem devemos ter um segundo valor yield para nossa feature "basic/detailed mode",
+que nos iremos adicioanr no nosso yield, ex. `{{yield user basic}}`.
 
-The consumer can decide how to name the yielded values. We could have named our yields like so:
+O consumidor pode decidir como nomear esses valores yield. Nos vamos nome-los da seguinte maneira:
 
 ```app/users/template.hbs
 {{#user-list users=users as |userModel isBasic|}}
-  {{! something creative here }}
+  {{! use sua criatividade aqui }}
 {{/user-list}}
 ```
 
 ### Actions Up
 
-Now that we know how to send data down, we probably want to manipulate that data via some user interaction,
-like changing a user's avatar. We can accomplish this by using actions.
+Agora que nos sabemos como funciona o  "data down", nos queremos tambem, manipular os dados inseridos pelo usuario,
+como a mudança do avatar ou nome. Nos conseguimos fazer isso usando actions.
 
-We'll be looking at a `{{user-profile}}` component that implements a save action. By yielding the action as a parameter, we allow the consumer to use this component without having to know how to save, but still be able to trigger a save.
+Nos iremos olhar no componente `{{user-profile}}` que implementa uma ação de save. Usando yield e passando a action como parametro, é permitido que o consumidor use esse componente esses dados
 
-Here's our component's definition:
+Aqui a definição do nosso componente:
 
 ```app/components/user-profile/component.js
 export default Ember.Component.extend({
@@ -223,13 +228,13 @@ export default Ember.Component.extend({
 ```
 
 ```app/components/user-profile/template.hbs
-{{! most likely we have some markup here }}
+{{! provavelmente existiria algum markup aqui }}
 {{yield profile (action "saveUser")}}
 ```
 
-So now the consumer will have access to our data and the
-action that we have defined. Lets see how this component could be consumed
-in block form.
+Então agora o consumidor irá ter acesso à nossa data e a action que definimos. 
+Vamos ver como esse componente pode ser consumido em forma de bloco;
+
 
 ```app/templates/user/profile.hbs
 {{#user-profile user=user as |profile saveUser|}}
@@ -237,12 +242,12 @@ in block form.
 {{/user-profile}}
 ```
 
-As you can see from this example, the consumer was able to hook into the
-`{{user-profile}}` component's `saveUser` action, which we passed down
-with the `(action "saveUser")` nested helper.  This helper reads a property off the actions hash of the current context, then creates a closure over that function and any arguments you pass.
+Como você pode ver nesse exmplo, é permitido que o consumidor olhe dentro do componente 
+`{{user-profile}}` e da action `saveUser`, que foi passada para baixo com o helper  `(action "saveUser")` 
+Esse helper le as propriedade do contexto dessa action em forma de hash. E então cria um closure em cima de qualquer argumento que você passe.
 
-We could also leverage this format to place actions on native HTML elements
-like an input button:
+Nos vamos fazer de um modo que a formação das ações sobre o HTML seja como um input button:
+
 
 ```hbs
 {{#user-profile user=user as |profile saveUser|}}
@@ -250,13 +255,13 @@ like an input button:
 {{/user-profile}}
 ```
 
-This is very useful since we are reusing the existing event hooks that
-are provided on these elements. This makes components much more reusable due to how we can compose
-small components that do one thing well.
+Isso é muito util, uma vez que estamos reusando um evento que já é nativo do elemento.
+Isso faz com que componetnes sejam mais reusaveis, uma vez que eles você usar pequenos componentes que 
+tem especificamente um comportamento.
 
 ### Wrapping Up
 
-Composing components is all about isolating functionality into reusable
-chunks that are easy to reason about and easy to combine together so that they work well together.
-This also has the added benefit of easier testing since we try to stay away from
-monolithic components that do everything, and can isolate small parts of functionality.
+Compor componentes é sobre isolar funcionalidades para modos reusaveis de um jeito que seja facil
+combina-los e faze-los trabalhar juntos
+Isso tambem aumenta a facilidade de testes uma vez que podemos ficar longe de compomentes gigantes que fazem tudo
+nos podemos isolar pequenas partes funcionalidades.

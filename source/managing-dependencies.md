@@ -63,7 +63,9 @@ Você pode agora dar `import` neles no seu app. Por exemplo `import { raw as icA
 
 ### Assets Especificos para cada Ambiente
 
-If you need to use different assets in different environments, specify an object as the first parameter. That object's key should be the environment name, and the value should be the asset to use in that environment.
+Se você precisa de um assets especifico para diferentes ambientes de desenvolvimento.
+Especifique como objeto no primeiro parametro. A chave do objeto deve ser o nome do ambiente, 
+e o seu valor deve ser qual asset usar nesse ambiente.
 
 ```ember-cli-build.js
 app.import({
@@ -72,9 +74,9 @@ app.import({
 });
 ```
 
-If you need to import an asset in only one environment you can wrap `app.import` in an `if` statement.
-For assets needed during testing, you should also use the `{type: 'test'}` option to make sure they
-are available in test mode.
+Se você precisar importar um assets em apenas um ambiente você pode escrever `app.import` como se fosse um `if`.
+Para assets necessarios durante o teste, você deve tambem usar a opção `{type: 'test'}` para ter certeza 
+que eles estarão disponiveis no ambiente de teste.
 
 ```ember-cli-build.js
 if (app.env === 'development') {
@@ -90,27 +92,27 @@ if (app.env === 'test') {
 
 ### CSS
 
-Provide the asset path as the first argument:
+Coloque o asset como primeiro argumento:
 
 ```ember-cli-build.js
 app.import('bower_components/foundation/css/foundation.css');
 ```
 
-All style assets added this way will be concatenated and output as `/assets/vendor.css`.
+Todos os estilos adicionados dessa maneira serão concatenados como `/assets/vendor.css`.
 
 ### Other Assets
 
-All other assets like images or fonts can also be added via `import()`. By default, they
-will be copied to `dist/` as they are.
+Todos os outros assets like imagens ou fontes tambem podem ser adicionados via `import()`. Por padrão eles serão ccompiados para
+`dist/`.
 
 ```ember-cli-build.js
 app.import('bower_components/font-awesome/fonts/fontawesome-webfont.ttf');
 ```
 
-This example would create the font file in `dist/font-awesome/fonts/fontawesome-webfont.ttf`.
+Esse exemplo deve criar uma arquivo de font em `dist/font-awesome/fonts/fontawesome-webfont.ttf`.
 
-You can also optionally tell `import()` to place the file at a different path.
-The following example will copy the file to `dist/assets/fontawesome-webfont.ttf`.
+Você tambem pode opcionalmente dizer `import()` para importar um arquivo que esteja em um path diferente.
+O exemplo a seguir irá fazer uma copia desse arquivo para `dist/assets/fontawesome-webfont.ttf`.
 
 ```ember-cli-build.js
 app.import('bower_components/font-awesome/fonts/fontawesome-webfont.ttf', {
@@ -118,7 +120,8 @@ app.import('bower_components/font-awesome/fonts/fontawesome-webfont.ttf', {
 });
 ```
 
-If you need to load certain dependencies before others, you can set the `prepend` property equal to `true` on the second argument of `import()`. This will prepend the dependency to the vendor file instead of appending it, which is the default behavior.
+Se você precisa carregar determinadas dependencias antes de outras, você pode adicionar a propriedade `prepend` para ser igual à `true` 
+no segundo argumento do `import()`. Isso vai fazer a dependencia ser adiciona no começo, e não no fim do arquivo vendor. (que por padrão adiciona no fim).
 
 ```ember-cli-build.js
 app.import('bower_components/es5-shim/es5-shim.js', {

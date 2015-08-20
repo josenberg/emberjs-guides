@@ -1,22 +1,22 @@
-By default, each component is backed by a `<div>` element. If you were
-to look at a rendered component in your developer tools, you would see
-a DOM representation that looked something like:
+Por padrão, todo componente é inserido dentro de um elemento `<div>`. Se vocÊ olhar para
+o componente renderizado no developer tools você verá que ele é representado por algo
+parecido com isso:
 
 ```html
 <div id="ember180" class="ember-view">
-  <h1>My Component</h1>
+  <h1>Meu componente</h1>
 </div>
 ```
 
-You can customize what type of element Ember generates for your
-component, including its attributes and class names, by creating a
-subclass of `Ember.Component` in your JavaScript.
+Você pode costumizar qual tipo de elemento o Ember gera para o seu componetne
+incluindo seus atributos e classes, você só precisa criar uma subclasse do 
+`Ember.Component` no seu JavaScript.
 
-### Customizing the Element
+### Costumizando o Elemento
 
-To use a tag other than `div`, subclass `Ember.Component` and assign it
-a `tagName` property. This property can be any valid HTML5 tag name as a
-string.
+Para usar uma classe diferente de `div`, você precisa criar uma subclasse de `Ember.Component`
+e edita-la com uma nova `tagName` property. Essa propriedade é uma string e 
+pode ser qualquer tag HTML5.
 
 ```app/components/navigation-bar.js
 export default Ember.Component.extend({
@@ -31,10 +31,10 @@ export default Ember.Component.extend({
 </ul>
 ```
 
-### Customizing Class Names
+### Costumizando as Classes
 
-You can also specify which class names are applied to the component's
-element by setting its `classNames` property to an array of strings:
+Você tambem pode especificar quais classes serão aplicadas no elemento 
+configurando a propriedade `classNames` (que por acaso, é um array of strings).
 
 ```app/components/navigation-bar.js
 export default Ember.Component.extend({
@@ -42,9 +42,9 @@ export default Ember.Component.extend({
 });
 ```
 
-If you want class names to be determined by properties of the component,
-you can use class name bindings. If you bind to a Boolean property, the
-class name will be added or removed depending on the value:
+Se você quiser que as classes sejam determinadas por propriedades do componente
+você pode usar bindings. Se você der bind em uma propriedade booleana, a classe
+será adicionada ou removida dependendo de seu valor:
 
 ```app/components/todo-item.js
 export default Ember.Component.extend({
@@ -53,16 +53,17 @@ export default Ember.Component.extend({
 });
 ```
 
-This component would render the following:
+Esse componente seria renderizado da seguinte maneira:
 
 ```html
 <div class="ember-view is-urgent"></div>
 ```
 
-If `isUrgent` is changed to `false`, then the `is-urgent` class name will be removed.
+Se `isUrgent` for mudado para `false`, então a `is-urgent` seria removida.
 
-By default, the name of the Boolean property is dasherized. You can customize the class name
-applied by delimiting it with a colon:
+Por padrão o nome das propriedades booleanas deve utilizar um hifen. 
+Você pode costumizar o nome da classe delimitando ela com um acento de dois pontos `:`:
+
 
 ```app/components/todo-item.js
 export default Ember.Component.extend({
@@ -71,13 +72,14 @@ export default Ember.Component.extend({
 });
 ```
 
-This would render this HTML:
+Isso iria renderizar no HTML:
 
 ```html
 <div class="ember-view urgent">
 ```
 
-Besides the custom class name for the value being `true`, you can also specify a class name which is used when the value is `false`:
+Alem de especificar qual classe usar quando o valor for `true`, você 
+tambem pode especificar qual classe usar quando o valor for igual à `false`:
 
 ```app/components/todo-item.js
 export default Ember.Component.extend({
@@ -86,14 +88,14 @@ export default Ember.Component.extend({
 });
 ```
 
-This would render this HTML:
+Isso irá renderizar no HTML:
 
 ```html
 <div class="ember-view disabled">
 ```
 
-You can also specify a class which should only be added when the property is
-`false` by declaring `classNameBindings` like this:
+VocÊ pode especificar a classe que só será aplicada caso a propriedade for 
+`false` declarando o `classNameBindings` desse jeito:
 
 ```app/components/todo-item.js
 export default Ember.Component.extend({
@@ -102,20 +104,19 @@ export default Ember.Component.extend({
 });
 ```
 
-This would render this HTML:
+Iso irá renderizar esse HTML:
 
 ```html
 <div class="ember-view disabled">
 ```
 
-If the `isEnabled` property is set to `true`, no class name is added:
+Se a propriedade `isEnabled` for `true`, ele não irá renderizar nenhuma classe, e ficaria como no exemplo abaixo:
 
 ```html
 <div class="ember-view">
 ```
 
-If the bound property's value is a string, that value will be added as a class name without
-modification:
+Se o valor essa propriedade for uma string, seu valor será adicionado como classe, sem nenhuma modificação:
 
 ```app/components/todo-item.js
 export default Ember.Component.extend({
@@ -124,7 +125,7 @@ export default Ember.Component.extend({
 });
 ```
 
-This would render this HTML:
+E o HTML renderizado seria:
 
 ```html
 <div class="ember-view highestPriority">
@@ -132,8 +133,7 @@ This would render this HTML:
 
 ### Customizing Attributes
 
-You can bind attributes to the DOM element that represents a component
-by using `attributeBindings`:
+Você pode fazer bind dos atributos para o DOM que representa o componente utilizando o `attributeBindings`:
 
 ```app/components/link-item.js
 export default Ember.Component.extend({
@@ -143,7 +143,7 @@ export default Ember.Component.extend({
 });
 ```
 
-You can also bind these attributes to differently named properties:
+Você tambem pode dar bind para qualquer tipo de propriedade do elemento:
 
 ```app/components/link-item.js
 export default Ember.Component.extend({

@@ -1,18 +1,17 @@
-By default a component does not have access to properties in the
-template scope in which it is used.
+Por padrão o componente não tem acesso às propriedades que são do escopo do template onde são usadas.
 
-For example, imagine you have a `blog-post` component that is used to
-display a blog post:
+Por exemplo, imagine que você tem um componente chamado `blog-post` que é usado para 
+mostrar um post em um blog:
 
 ```app/templates/components/blog-post.hbs
 <h1>Component: {{title}}</h1>
 <p>Lorem ipsum dolor sit amet.</p>
 ```
 
-You can see that it has a `{{title}}` Handlebars expression to print the
-value of the `title` property inside the `<h1>`.
+Você pode ver que existe uma expressão Handlebars `{{title}}` para 
+imprimir na tela o valor da propriedade `title` dentro do elemento `<h1>`.
 
-Now imagine we have the following template and route:
+Agora imagine que nos temos o seguinte template e rota:
 
 ```app/routes/index.js
 export default Ember.Route.extend({
@@ -30,47 +29,44 @@ export default Ember.Route.extend({
 {{blog-post}}
 ```
 
-Running this code, you will see that the first `<h1>` (from the outer
-template) displays the `title` property, but the second `<h1>` (from
-inside the component) is empty.
+Rodando esse codigo, você vai que o primeiro `<h1>` (do template externo)
+mostra a propriedade `title`, mas o segundo `<h1>` (de dentro do componente)
+é vazio.
 
-We can fix this by making the `title` property available to the
-component:
+Nos podemos corrigir isso fazendo que a propriedade `title` seja disponivel para o componente
 
 ```handlebars
 {{blog-post title=title}}
 ```
 
-This will make the `title` property in the outer template scope
-available inside the component's template using the same name, `title`.
+Isso fará a propriedade `title` do escopo externo tambem disponivel para ser usada
+dentro do template do componente, com o mesmo nome, `title`.
 
-If, in the above example, the model's `title` property was instead
-called `name`, we would change the component usage to:
+Se, no exemplo abaixo, a propriedade `title` do modelo fosse chamada de `name`, você declararia o componente assim:
 
 ```handlebars
 {{blog-post title=name}}
 ```
 
-In other words, you are binding a named property from the outer scope to
-a named property in the component scope, with the syntax
-`componentProperty=outerProperty`.
+Em outras palavras, quando você esta fazendo bind de uma propriedade do escopo externo
+para uma variavel dentro do escopo do componente, você usa a syntax `componentProperty=outerProperty`.
 
-It is important to note that the value of these properties is bound.
-Whether you change the value on the model or inside the component, the
-values stay in sync. In the following example, type some text in the
-text field either in the outer template or inside the component and note
-how they stay in sync.
+Isso é importante para notar que o valor dessas propriedades esta ligado.
+Sempre que você mudar o valor dela de dentro ou de fora do seu componente 
+os valores serão sincronizados. No exempl a seguir, escreva algum texto 
+na caixa de entrada tanto externa, quanto interna do nosso comoponente
+e veja como eles se comportam de maneira sincronizada:
 
-You can also bind properties from inside an `{{#each}}` loop. This will
-create a component for each item and bind it to each model in the loop.
+Você tambem pode fazer bind de propriedades de dentro de um `{{#each}}` loop. 
+Isso irá criar um componente para cada item e fazer bind dele para cada modelo no loop.
 
 ```handlebars
 {{#each model as |post|}}
   {{blog-post title=post.title}}
 {{/each}}
 ```
-If you are using the `{{component}}` helper to render your component, you can
-pass properties to the chosen component in the same manner:
+Se você esta usando o helper `{{component}}` para renderizar seu componente, você pode passar propriedades
+para o componente escolhido da mesma maneira:
 
 ```handlebars
 {{component componentName title=title name=name}}
@@ -78,9 +74,10 @@ pass properties to the chosen component in the same manner:
 
 ### Positional Params
 
-Apart from passing attributes to a component, you can also pass in positional parameters, like we've seen with the `{{link-to}}`, e.g. `{{link-to "user" userModel}}`.
+Alem de passar atributos para um componente, você tambem pode passar parametros posicionais, 
+como nos vimos com o `{{link-to}}`, ex. `{{link-to "user" userModel}}`.
 
-You can access these parameters by setting the `positionalParams` attribute in your component class.
+Você pode acessar esses parametros configurando o atributo `positionalParams` na classe do seu componente.
 
 ```app/components/x-visit.js
 const MyComponent = Ember.Component.extend();
@@ -93,10 +90,11 @@ MyComponent.reopenClass({
 export default MyComponent;
 ```
 
-This will expose the first parameter in your template as the `{{name}}` attribute and the second as `{{model}}`. They will also be available as regular attributes in your component via `this.get('name')` and `this.get('model')`.
+Isso vai expor o primeiro parametro no seu template como um atributo chamado `{{name}}` e o segundo como `{{model}}`. 
+Eles tambem vão ficar disponiveis como atributos reculares no seu componente via `this.get('name')` and `this.get('model')`.
 
-In addition to mapping the parameters to attributes, you can also have an arbitrary number of parameters by setting `positionalParams`
-to a string, e.g. `positionalParams: 'params'`. This will allow you to access those params as an array like so:
+Alem de mapear os parametros para atributos, você pode tambem ter um numero arbitrario de parametros configurando `positionalParams` como uma string, 
+ex. `positionalParams: 'params'`. isso tambem vai permitir acesso à esses parametros em um array, como no exemplo abaixo:
 
 ```app/templates/components/x-visit.hbs
 {{#each params as |param|}}
